@@ -22,6 +22,11 @@ This will run the unit test which tests the Page Scanning function
 yarn test
 ```
 
+## Not Achieved
+1. Unable to get the selection on the dropdown options
+2. Pop up removal did not work
+3. Generally I think the async/wait are not staging correctly and I read some stuff online saying there could be issues. I think in hindsight I may have used Java/C#/Python instead of JavaScript for this reason
+
 ## Tech Stack
 TypeScript - Personally I am enjoying Typescript quite a lot these days, and I tend to prefer it over raw JavaScript.
 
