@@ -70,13 +70,15 @@ export class Client {
         const dropdownElement = await this.getDropdown(key);
         if(!dropdownElement) return;
         this.setActionType(this.genericSelectElement, ActionType.SELECT);
+        this.capturePageHTML(`${this.currentPage} Dropdown Menu - ${key} ${value}`)
         await dropdownElement.click();
         
         // FAIL - to select option
         // this.setNateKey(genericSelectOptionElement, key);
         // this.setActionType(genericSelectOptionElement, ActionType.SELECT);
-        //await this.driver.manage().setTimeouts( { implicit: 2000 } )
-        //await (await this.getDropdownOption(dropdownElement, key)).click()
+        // this.capturePageHTML(`${this.currentPage} Dropdown Option - ${key} ${value}`)
+        // await this.driver.manage().setTimeouts( { implicit: 2000 } )
+        // await (await this.getDropdownOption(dropdownElement, key)).click()
     
     }
 
@@ -96,13 +98,14 @@ export class Client {
     }
 
     async writeGenericTextField(key: string) {
-        const inputValue = this.dict[key];
+        const value = this.dict[key];
         key = key !== 'password' ? key : 'pwd';
         const pageElement = new PageElement(By.id(key), `document.getElementById(${key})`);
         const inputField = await this.page3.findForm().findElement(pageElement.by); 
         this.setNateKey(pageElement, key);
         this.setActionType(pageElement, ActionType.INPUT);
-        inputField.sendKeys(inputValue);
+        this.capturePageHTML(`${this.currentPage} Text Input - ${key} ${value}`)
+        inputField.sendKeys(value);
     }
 
     async checkGenericRadioButton(key: string) {
@@ -118,6 +121,7 @@ export class Client {
                     );
                 this.setNateKey(pageElement, key);
                 this.setActionType(pageElement, ActionType.CHECK);
+                this.capturePageHTML(`${this.currentPage} Radio Button - ${key} ${value}`)
                 checkBox.click();
             }
         }
@@ -133,7 +137,6 @@ export class Client {
 
     async setAttribute(query: string, key: string, value: string) {
         this.driver.executeScript(`${query}.setAttribute("${key}", "${value}")`);
-        this.capturePageHTML(`${key} ${value}`);
     }
 
     async capturePageHTML(title: string) {

@@ -14,6 +14,7 @@ export class Page1 extends Page {
 
     nextPage() {
         this.client.setActionType(this.startButton, ActionType.CLICK);
+        this.client.capturePageHTML(`${this.client.currentPage} Start Button - ${ActionType.CLICK}`)
         this.driver.findElement(this.startButton.by).click()
     }
 }

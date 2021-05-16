@@ -20,6 +20,7 @@ export class Page3 extends Page {
             async() => {
                 const buttons = await this.client.driver.findElements(this.popUpCloseButton.by);
                 await this.client.setActionType(this.popUpCloseButton, ActionType.CLICK);
+                await this.client.capturePageHTML(`${this.client.currentPage} Pop Up Close Button - ${ActionType.CLICK}`);
                 if(buttons.length) {
                     buttons[0].click();
                 }
