@@ -49,7 +49,7 @@ export class Client {
     }
 
     async attemptToFillPage(properties: string[]) {
-        properties.forEach(async key => {
+        for(const key of properties) {
             for(const func of this.formFillFunctions) {
                 try {
                     await func.call(this, key);
@@ -57,31 +57,30 @@ export class Client {
                     continue;
                 }
             }
-        })
+        }
+    }
+
+
+     async openGenericDropdownAndSelect(key: string) {
+        try {
+            const value = this.dict[key];
+            const dropdownElement = await this.getDropdown(key);
+            if(!dropdownElement) return;
+            await this.setActionType(this.genericSelectElement, ActionType.SELECT);
+            await this.capturePageHTML(`Dropdown Menu - ${key} ${value}`)
+            await dropdownElement.click();
+            
+            // FAIL - to select option
+            await this.selectDropdownOption(dropdownElement, key, value);
+        } catch (err) {
+            return;
+        }
+    
     }
 
     genericSelectQuery = "document.getElementsByClassName('custom-select-wrapper')[0]";
     genericSelectElement = new PageElement(By.className('custom-select-wrapper'), this.genericSelectQuery);
-
-    genericSelectOptionQuery = "";
-    genericSelectOptionElement = new PageElement(By.className('custom-select-wrapper'), this.genericSelectOptionQuery);
-    async openGenericDropdownAndSelect(key: string) {
-        const value = this.dict[key];
-        const dropdownElement = await this.getDropdown(key);
-        if(!dropdownElement) return;
-        await this.setActionType(this.genericSelectElement, ActionType.SELECT);
-        await this.capturePageHTML(`${this.currentPage} Dropdown Menu - ${key} ${value}`)
-        await dropdownElement.click();
-        
-        // FAIL - to select option
-        // this.setNateKey(genericSelectOptionElement, key);
-        // this.setActionType(genericSelectOptionElement, ActionType.SELECT);
-        // this.capturePageHTML(`${this.currentPage} Dropdown Option - ${key} ${value}`)
-        // await this.driver.manage().setTimeouts( { implicit: 2000 } )
-        // await (await this.getDropdownOption(dropdownElement, key)).click()
-    
-    }
-
+ 
     async getDropdown(name: string): Promise<WebElement> {
         const selectElements =  await this.driver.findElements(By.className('custom-select-wrapper'))
         selectElements.filter(async element =>
@@ -89,41 +88,60 @@ export class Client {
         return selectElements[0] 
     }
 
-    async getDropdownOption(element: WebElement, input: string): Promise<WebElement> {
+    genericSelectOptionQuery = "";
+    genericSelectOptionElement = new PageElement(By.className('custom-option undefined'), this.genericSelectOptionQuery);
+   
+    async selectDropdownOption(element: WebElement, key: string, input: string): Promise<void> {
         await this.driver.manage().setTimeouts( { implicit: 2000 } )
-        const customOptions = await element.findElement(By.className('custom-options'));
-        const query = `//*[ text() = '${capitalize(input)}' ]`;
-        return await this.driver.wait(until.elementIsVisible(customOptions.findElement(By.xpath(query))));
-       
+        const optionElements = await element.findElements(this.genericSelectOptionElement.by);
+        for(const optionElement of optionElements) {
+            const text = await optionElement.getText();
+            const dataValue = await optionElement.getAttribute('data-value');            
+            if(text.toLowerCase() === input 
+                || dataValue.toLowerCase() === input) {
+                this.setNateKey(this.genericSelectOptionElement, key);
+                this.setActionType(this.genericSelectOptionElement, ActionType.SELECT);
+                this.capturePageHTML(`Dropdown Option - ${key} ${input}`)    
+                optionElement.click();
+            }
+        }
     }
 
     async writeGenericTextField(key: string) {
-        const value = this.dict[key];
-        key = key !== 'password' ? key : 'pwd';
-        const pageElement = new PageElement(By.id(key), `document.getElementById(${key})`);
-        const inputField = await this.page3.findForm().findElement(pageElement.by); 
-        await this.setNateKey(pageElement, key);
-        await this.setActionType(pageElement, ActionType.INPUT);
-        await this.capturePageHTML(`${this.currentPage} Text Input - ${key} ${value}`)
-        await inputField.sendKeys(value);
+        try {
+            const value = this.dict[key];
+            key = key !== 'password' ? key : 'pwd';
+            const pageElement = new PageElement(By.id(key), `document.getElementById("${key}")`);
+            const inputField = await this.page3.findForm().findElement(pageElement.by); 
+            await this.setNateKey(pageElement, key);
+            await this.setActionType(pageElement, ActionType.INPUT);
+            await this.capturePageHTML(`Text Input - ${key} ${value}`)
+            await inputField.sendKeys(value);
+        } catch (err) {
+            return;
+        }
     }
 
     async checkGenericRadioButton(key: string) {
         const value = this.dict[key];
-        const checkBoxes: WebElement[] = await this.driver.findElements(By.className('form-check'));
-        for(let i = 0;  i < checkBoxes.length; i++) {
-            const checkBox = checkBoxes[i];
-            if(await checkBox.getAttribute("value") === value) {
-                const pageElement = 
-                    new PageElement(
-                        By.className('form-check'), 
-                        `document.getElementById('defaultCheck${i}')`
-                    );
-                await this.setNateKey(pageElement, key);
-                await this.setActionType(pageElement, ActionType.CHECK);
-                await this.capturePageHTML(`${this.currentPage} Radio Button - ${key} ${value}`)
-                await checkBox.click();
+        try {
+            const checkBoxes: WebElement[] = await this.driver.findElements(By.className('form-check'));
+            for(let i = 0;  i < checkBoxes.length; i++) {
+                const checkBox = checkBoxes[i];
+                if(await checkBox.getAttribute("value") === value) {
+                    const pageElement = 
+                        new PageElement(
+                            By.className('form-check'), 
+                            `document.getElementById("defaultCheck${i-1}")`
+                        );
+                    await this.setNateKey(pageElement, key);
+                    await this.setActionType(pageElement, ActionType.CHECK);
+                    await this.capturePageHTML(`Radio Button - ${key} ${value}`)
+                    await checkBox.click();
+                }
             }
+        } catch (err) {
+            return;
         }
     }
 

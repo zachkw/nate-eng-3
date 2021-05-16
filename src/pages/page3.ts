@@ -16,7 +16,7 @@ export class Page3 extends Page {
     }
 
     async popUpCheck(): Promise<void> {
-        await this.driver.wait(until.elementIsVisible(await this.client.driver.findElement(By.id('popup'))), 15000).then(
+        await this.driver.wait(until.elementIsVisible(await this.client.driver.findElement(By.id('popup'))), 30000).then(
             async() => {
                 const buttons = await this.client.driver.findElements(this.popUpCloseButton.by);
                 await this.client.setActionType(this.popUpCloseButton, ActionType.CLICK);
@@ -36,7 +36,8 @@ export class Page3 extends Page {
 
     async clickSubmit(): Promise<void> {
         await this.client.setActionType(this.submitButton, ActionType.CLICK);
-        await this.client.driver.findElement(By.id('btn')).click()
-    }
-        
+        this.client.capturePageHTML(`Submit Button ${ActionType.CLICK}`);
+        await this.client.driver.wait(until.elementIsNotVisible(this.driver.findElement(this.popUpContainer.by)));
+        await this.client.driver.findElement(By.id('btn')).click();
+    }    
 }

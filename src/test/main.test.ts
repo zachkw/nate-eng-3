@@ -1,4 +1,5 @@
 import { Builder, WebDriver } from 'selenium-webdriver';
+import { resolveProjectReferencePath } from 'typescript';
 import { Client } from "../client";
 import { clearSnapshotDirectory } from '../utilities';
 
@@ -37,9 +38,9 @@ describe('Main Run', () => {
         await client.page2.ensureLoad();
         
         properties = await client.getPageProperties();
-        await client.attemptToFillPage(properties);
+        // await client.attemptToFillPage(properties);
 
-        await client.page2.clickNextPage();
+        // await client.page2.clickNextPage();
     });
 
     it.only('Page 3', async () => {
@@ -55,7 +56,11 @@ describe('Main Run', () => {
         await client.page3.clickSubmit();
 
         await client.page3.popUpCheck();
-        await driver.manage().setTimeouts( { implicit: 30000 } );
+        // await driver.manage().setTimeouts( { implicit: 30000 } );
     });
+
+    afterAll(() => {
+        driver.close();
+    })
 });
 

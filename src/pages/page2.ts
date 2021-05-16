@@ -12,12 +12,12 @@ export class Page2 extends Page {
     
     async clickNextPage() {
         this.client.setActionType(this.nextPageButton, ActionType.CLICK);
-        this.client.capturePageHTML(`${this.client.currentPage} Next Page Button - ${ActionType.CLICK}`);
+        this.client.capturePageHTML(`Next Page Button - ${ActionType.CLICK}`);
         this.driver.findElement(this.nextPageButton.by).click();
     }
 
     async ensureLoad() {
-        await this.driver.wait(until.elementLocated(this.titleText.by), 20000);
+        await this.driver.wait(until.elementLocated(this.loadingText.by), 20000);
         await this.driver.wait(until.elementIsNotVisible(this.driver.findElement(this.loadingText.by)), 60000);
     }
 }

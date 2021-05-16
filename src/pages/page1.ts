@@ -12,9 +12,9 @@ export class Page1 extends Page {
         await this.driver.wait(until.elementLocated(this.titleText.by), 20000)
     }
 
-    nextPage() {
-        this.client.setActionType(this.startButton, ActionType.CLICK);
-        this.client.capturePageHTML(`${this.client.currentPage} Start Button - ${ActionType.CLICK}`)
-        this.driver.findElement(this.startButton.by).click()
+    async nextPage() {
+        await this.client.setActionType(this.startButton, ActionType.CLICK);
+        await this.client.capturePageHTML(`Start Button - ${ActionType.CLICK}`)
+        await this.driver.findElement(this.startButton.by).click()
     }
 }
