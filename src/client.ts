@@ -60,17 +60,17 @@ export class Client {
         })
     }
 
-    genericSelectQuery: string = "document.getElementsByClassName('custom-select-wrapper')[0]";
+    genericSelectQuery = "document.getElementsByClassName('custom-select-wrapper')[0]";
     genericSelectElement = new PageElement(By.className('custom-select-wrapper'), this.genericSelectQuery);
 
-    genericSelectOptionQuery: string = "";
+    genericSelectOptionQuery = "";
     genericSelectOptionElement = new PageElement(By.className('custom-select-wrapper'), this.genericSelectOptionQuery);
     async openGenericDropdownAndSelect(key: string) {
         const value = this.dict[key];
         const dropdownElement = await this.getDropdown(key);
         if(!dropdownElement) return;
-        this.setActionType(this.genericSelectElement, ActionType.SELECT);
-        this.capturePageHTML(`${this.currentPage} Dropdown Menu - ${key} ${value}`)
+        await this.setActionType(this.genericSelectElement, ActionType.SELECT);
+        await this.capturePageHTML(`${this.currentPage} Dropdown Menu - ${key} ${value}`)
         await dropdownElement.click();
         
         // FAIL - to select option
@@ -102,10 +102,10 @@ export class Client {
         key = key !== 'password' ? key : 'pwd';
         const pageElement = new PageElement(By.id(key), `document.getElementById(${key})`);
         const inputField = await this.page3.findForm().findElement(pageElement.by); 
-        this.setNateKey(pageElement, key);
-        this.setActionType(pageElement, ActionType.INPUT);
-        this.capturePageHTML(`${this.currentPage} Text Input - ${key} ${value}`)
-        inputField.sendKeys(value);
+        await this.setNateKey(pageElement, key);
+        await this.setActionType(pageElement, ActionType.INPUT);
+        await this.capturePageHTML(`${this.currentPage} Text Input - ${key} ${value}`)
+        await inputField.sendKeys(value);
     }
 
     async checkGenericRadioButton(key: string) {
@@ -119,24 +119,24 @@ export class Client {
                         By.className('form-check'), 
                         `document.getElementById('defaultCheck${i}')`
                     );
-                this.setNateKey(pageElement, key);
-                this.setActionType(pageElement, ActionType.CHECK);
-                this.capturePageHTML(`${this.currentPage} Radio Button - ${key} ${value}`)
-                checkBox.click();
+                await this.setNateKey(pageElement, key);
+                await this.setActionType(pageElement, ActionType.CHECK);
+                await this.capturePageHTML(`${this.currentPage} Radio Button - ${key} ${value}`)
+                await checkBox.click();
             }
         }
     }
 
     async setActionType(element: PageElement, actionType: ActionType) {
-        element.query && this.setAttribute(element.query, 'action-type', actionType);
+        element.query && await this.setAttribute(element.query, 'action-type', actionType);
     }
 
     async setNateKey(element: PageElement, key: string) {
-        element.query && this.setAttribute(element.query, 'nate-dict-key', key);
+        element.query && await this.setAttribute(element.query, 'nate-dict-key', key);
     }
 
     async setAttribute(query: string, key: string, value: string) {
-        this.driver.executeScript(`${query}.setAttribute("${key}", "${value}")`);
+        await this.driver.executeScript(`${query}.setAttribute("${key}", "${value}")`);
     }
 
     async capturePageHTML(title: string) {
