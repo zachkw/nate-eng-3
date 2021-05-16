@@ -1,10 +1,9 @@
 
-import { Builder, By, Key, until, WebDriver, WebElement } from 'selenium-webdriver';
+import { By, until, WebElement } from 'selenium-webdriver';
 import { ActionType, PageElement } from '../element';
 import { Page } from './page';
 
 export class Page3 extends Page {
-    
     startButton = new PageElement(By.css("input"), "document.querySelector('input')");
     popUpContainer = new PageElement(By.id('popup'));
     popUpCloseButton = new PageElement(By.css('input'))
@@ -16,22 +15,15 @@ export class Page3 extends Page {
     }
 
     async popUpCheck(): Promise<void> {
-        await this.driver.wait(until.elementIsVisible(await this.client.driver.findElement(By.id('popup'))), 30000).then(
-            async() => {
-                const buttons = await this.client.driver.findElements(this.popUpCloseButton.by);
-                await this.client.setActionType(this.popUpCloseButton, ActionType.CLICK);
-                await this.client.capturePageHTML(`${this.client.currentPage} Pop Up Close Button - ${ActionType.CLICK}`);
-                if(buttons.length) {
-                    buttons[0].click();
-                }
-            }
-        ).catch( () => {
-            console.log('no pop up appeared');
-        })
+        await this.driver.wait(until.elementIsVisible(await this.client.driver.findElement(this.popUpContainer.by)), 30000);
+        const button = (await this.client.driver.findElements(this.popUpCloseButton.by)).find(async element => (await element.getText()) === 'X');
+        await this.client.setActionType(this.popUpCloseButton, ActionType.CLICK);
+        await this.client.capturePageHTML(`Pop Up Close Button - ${ActionType.CLICK}`);
+        button!.click();
     }
 
     findForm(): WebElement {
-        return this.client.driver.findElement(By.css('form'))
+        return this.client.driver.findElement(By.css('form'));
     }
 
     async clickSubmit(): Promise<void> {

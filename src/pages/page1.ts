@@ -4,7 +4,6 @@ import { ActionType, PageElement } from '../element';
 import { Page } from './page';
 
 export class Page1 extends Page {
-
     titleText = new PageElement(By.css('h1'), undefined)
     startButton = new PageElement(By.css("input"), "document.querySelector('input')")
 

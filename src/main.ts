@@ -20,7 +20,7 @@ const run = async () => {
         await client.driver.get('https://nate-eu-west-1-prediction-test-webpages.s3-eu-west-1.amazonaws.com/tech-challenge/page1.html')
         client.currentPage = '1';
         await client.page1.ensureLoad();
-        client.page1.nextPage();
+        await client.page1.nextPage();
 
         client.currentPage = '2';
         await client.page2.ensureLoad();

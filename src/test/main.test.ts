@@ -1,5 +1,4 @@
 import { Builder, WebDriver } from 'selenium-webdriver';
-import { resolveProjectReferencePath } from 'typescript';
 import { Client } from "../client";
 import { clearSnapshotDirectory } from '../utilities';
 
@@ -18,45 +17,39 @@ describe('Main Run', () => {
     let client: Client;
     let properties;
 
-    beforeAll(() => {
+    beforeAll(async () => {
         clearSnapshotDirectory();
         driver = new Builder().forBrowser('chrome').build();
         client = new Client(driver, dict);
+        await client.driver.get('https://nate-eu-west-1-prediction-test-webpages.s3-eu-west-1.amazonaws.com/tech-challenge/page1.html')
     });
     
 
     it('Page 1', async () => {
-        await client.driver.get('https://nate-eu-west-1-prediction-test-webpages.s3-eu-west-1.amazonaws.com/tech-challenge/page1.html')
         client.currentPage = '1';
         await client.page1.ensureLoad();
-        client.page1.nextPage();
+        await client.page1.nextPage();
     });
 
     it('Page 2', async () => {
-        client.driver.get('https://nate-eu-west-1-prediction-test-webpages.s3-eu-west-1.amazonaws.com/tech-challenge/page2.html')
         client.currentPage = '2';
         await client.page2.ensureLoad();
         
         properties = await client.getPageProperties();
-        // await client.attemptToFillPage(properties);
+        await client.attemptToFillPage(properties);
 
-        // await client.page2.clickNextPage();
+        await client.page2.clickNextPage();
     });
 
-    it.only('Page 3', async () => {
+    it('Page 3', async () => {
         client.currentPage = '3';
-        await client.driver.get('https://nate-eu-west-1-prediction-test-webpages.s3-eu-west-1.amazonaws.com/tech-challenge/page3.html');
         await client.page3.ensureLoad();
 
-        // FAIL: can't get this to work
-        // client.page3.popUpCheck();
+        client.page3.popUpCheck();
 
         properties = await client.getPageProperties();
         await client.attemptToFillPage(properties);
         await client.page3.clickSubmit();
-
-        await client.page3.popUpCheck();
-        // await driver.manage().setTimeouts( { implicit: 30000 } );
     });
 
     afterAll(() => {
