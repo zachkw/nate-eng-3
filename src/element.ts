@@ -1,4 +1,4 @@
-import { Builder, By, Key, until, WebDriver, WebElement } from 'selenium-webdriver';
+import { By } from 'selenium-webdriver';
 
 export class PageElement {
     by: By

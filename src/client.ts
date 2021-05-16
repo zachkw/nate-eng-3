@@ -1,9 +1,8 @@
-import { By, until, WebDriver, WebElement } from 'selenium-webdriver';
+import { By, WebDriver, WebElement } from 'selenium-webdriver';
 import { PageElement } from './element';
 import { Page1 } from './pages/page1';
 import { Page2 } from './pages/page2';
 import { Page3 } from './pages/page3';
-import { capitalize } from './utilities';
 import fs from 'fs';
 
 export enum ActionType {

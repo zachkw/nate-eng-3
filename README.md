@@ -22,11 +22,6 @@ This will run the unit test which tests the Page Scanning function
 yarn test
 ```
 
-## Not Achieved
-1. Unable to get the selection on the dropdown options
-2. Pop up removal did not work
-3. Generally I think the async/wait are not staging correctly and I read some stuff online saying there could be issues. I think in hindsight I may have used Java/C#/Python instead of JavaScript for this reason
-
 ## Tech Stack
 TypeScript - Personally I am enjoying Typescript quite a lot these days, and I tend to prefer it over raw JavaScript.
 
@@ -46,5 +41,3 @@ I have to say, I enjoyed this test more than I initially expected, and the furth
 I felt the exercise was almost asking to build the base of the kind of system I imagine you use for Nate's checkout processing, and that appealed to me quite a lot. I have tried to focus on a design that would scale well, as more web pages were tackled.
 
 I would have liked to have created my own WebElement class, which offered more of the inbuilt functions like updating the nate-key and action-types at the action points, as well as creating specific web elements for the different action types.
-
-Ultimately, I wish I had more time for this task, as the potential seems quite grand and I imagine you could create a really nice system for this operation, but I have failed in managing my time well due to my lack of recent practice with Selenium and the amount I have on currently.
