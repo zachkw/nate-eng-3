@@ -15,11 +15,15 @@ export class Page3 extends Page {
     }
 
     async popUpCheck(): Promise<void> {
-        await this.driver.wait(until.elementIsVisible(await this.client.driver.findElement(this.popUpContainer.by)), 30000);
-        const button = (await this.client.driver.findElements(this.popUpCloseButton.by)).find(async element => (await element.getText()) === 'X');
-        await this.client.setActionType(this.popUpCloseButton, ActionType.CLICK);
-        await this.client.capturePageHTML(`Pop Up Close Button - ${ActionType.CLICK}`);
-        button!.click();
+        try {
+            await this.driver.wait(until.elementIsVisible(await this.client.driver.findElement(this.popUpContainer.by)), 30000);
+            const button = (await this.client.driver.findElements(this.popUpCloseButton.by)).find(async element => (await element.getText()) === 'X');
+            await this.client.setActionType(this.popUpCloseButton, ActionType.CLICK);
+            await this.client.capturePageHTML(`Pop Up Close Button - ${ActionType.CLICK}`);
+            button!.click();
+        } catch {
+            console.log('no pop up appeared');
+        }
     }
 
     findForm(): WebElement {

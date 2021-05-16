@@ -38,8 +38,6 @@ const run = async () => {
         properties = await client.getPageProperties();
         await client.attemptToFillPage(properties);
         await client.page3.clickSubmit();
-
-        driver.quit();
 }
 
 run();
